@@ -2,15 +2,11 @@ package lotfigrira.location.services;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import lotfigrira.location.Dto.ReservationDto;
-import lotfigrira.location.Validators.AdherantValidator;
 import lotfigrira.location.Validators.ReservationValidator;
 import lotfigrira.location.exceptions.InvalidEntityException;
 import lotfigrira.location.modul.Reservation;
@@ -26,11 +22,11 @@ public class ReservationService {
     }
 
     public ReservationDto save(ReservationDto dto) {
-                List<String> errors=ReservationValidator.validate(dto);
+        List<String> errors=ReservationValidator.validate(dto);
 
         if (!errors.isEmpty()) {
             log.error("Invalid reservation {}", dto);
-                throw new InvalidEntityException("invalid reservation",errors);
+            throw new InvalidEntityException("invalid reservation",errors);
         }
         List<Reservation> overlappingReservations = reservationRepository.findOverlappingReservations(
                 dto.getDate_res(),
@@ -61,12 +57,13 @@ public class ReservationService {
         ;
     }
 
-    public void delete(Integer id){
+    public String delete(Integer id){
         if (id == null) {
             log.error("ID is NULL !");
-            return;
+            return "ID is null !!";
         }
         reservationRepository.deleteById(id);
+        return "deleted successfully";
     }
     // public List<Integer> getAvailableHoursForTerrain(Integer terrainId, String dateRes) {
     //     int openingHour = 8;

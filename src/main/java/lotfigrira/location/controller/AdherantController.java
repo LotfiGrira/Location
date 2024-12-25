@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import lotfigrira.location.Dto.AdherantDto;
+import lotfigrira.location.Validators.AdherantValidator;
+import lotfigrira.location.exceptions.InvalidEntityException;
 import lotfigrira.location.services.AdherantService;
 
 @RestController
@@ -22,6 +24,10 @@ AdherantController(AdherantService adherantService){
 
 @PostMapping("/new-adherant")
     public AdherantDto save(@RequestBody AdherantDto dto){
+        List<String> errors = AdherantValidator.validate(dto);
+        if (!errors.isEmpty()) { 
+            throw new InvalidEntityException ("check your object please !!",errors);
+        }
         return adherantService.save(dto);
     }
 @GetMapping("/adherant/{id}")
@@ -29,7 +35,7 @@ AdherantController(AdherantService adherantService){
         return adherantService.findById(id);
     }
 
-@GetMapping("/adherant/all")
+@GetMapping("/adherants")
 public List<AdherantDto> findAll(){
     return adherantService.findAll();
 }

@@ -1,13 +1,23 @@
 package lotfigrira.location.services;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+
+import jakarta.persistence.Entity;
+import lombok.extern.slf4j.Slf4j;
+import lotfigrira.location.Dto.TerrainDto;
+import lotfigrira.location.Validators.TerrainValidator;
+import lotfigrira.location.exceptions.EntityNotFoundException;
+import lotfigrira.location.exceptions.InvalidEntityException;
 import lotfigrira.location.modul.Terrain;
 import lotfigrira.location.repo.TerrainRepository;
 
 @Service
+@Slf4j
 public class TerrainService {
 
     private final TerrainRepository terrainRepository;
@@ -16,33 +26,41 @@ public class TerrainService {
         this.terrainRepository = terrainRepository;
     }
 
-    public Terrain saveTerrain(Terrain terrain) {
-        if (ObjectUtils.isEmpty(terrain)) {
-            throw new IllegalArgumentException("The terrain object cannot be NULL !!!");
+    public TerrainDto save(TerrainDto dto) {
+        List<String> errors = TerrainValidator.validate(dto);
+        if (!errors.isEmpty()) {
+            log.error("Invalid type 'terrain'", errors);
+            throw new InvalidEntityException("The object 'terrain' cannot be NULL !!!");
         }
-        return terrainRepository.save(terrain);
+        return TerrainDto.fromEntity(terrainRepository.save(TerrainDto.toEntity(dto)));
     }
 
 
-    public Terrain findTerrainById(Integer id){
+    public TerrainDto findById(Integer id){
         if (id == null) {
-            throw new RuntimeException("ID should not be NULL !!");
+            log.error("ID should not be NULL !!!");
+            return null ;
         }
-        return terrainRepository.findById(id).orElseThrow(()-> new RuntimeException("No exist 'Terrain' with this ID :" + id + " !!!!"));
+        return terrainRepository.findById(id).map(TerrainDto::fromEntity).orElseThrow(()-> 
+                            new EntityNotFoundException(
+                                "No exist 'Terrain' with this ID :" + id + " !!!!"
+                                )
+                                );
     }
 
-    public List<Terrain> findAllTerrains() {
-        return terrainRepository.findAll();
+    public List<TerrainDto> findAllTerrains() {
+        return terrainRepository.findAll().stream()
+                .map(TerrainDto::fromEntity)
+                .collect(Collectors.toList())    
+        ;
     }
 
-    public void deleteTerrain(Integer id){
+    public String delete(Integer id){
         if (id == null) {
-            throw new RuntimeException("ID should not be NULL !!!");
+            log.error("ID shouled not be null !!!");
         }
-        try {
             terrainRepository.deleteById(id);
-        } catch (Exception e) {
-            throw new IllegalStateException("Can't delete this object with that ID: "+ id);
-        }
-    }
+            return "deteleted successfully !";
+}
+
 }

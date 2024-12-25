@@ -20,11 +20,6 @@ public class AdherantService {
         this.adherantRepository = adherantRepository;
     }
     public AdherantDto save(AdherantDto dto){
-        List<String> errors=AdherantValidator.validate(dto);
-        if(!errors.isEmpty()){
-                log.error("Invalid adherant {}", dto);
-                throw new InvalidEntityException("invalid adherant",errors);
-        }
         return AdherantDto.fromEntity(
                     adherantRepository.save(
                         AdherantDto.toEntity(dto)
@@ -46,12 +41,13 @@ public class AdherantService {
         .map(AdherantDto::fromEntity)
         .collect(Collectors.toList());
     }
-    public void delete(Integer id){
+    public String delete(Integer id){
         if (id == null) {
             log.error("ID is NULL !");
-            return;
+            return"ID is null !";
         }
         adherantRepository.deleteById(id);
+        return "deleted successfully !";
     }
 
 }
