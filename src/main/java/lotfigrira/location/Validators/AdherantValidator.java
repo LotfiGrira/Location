@@ -2,9 +2,7 @@ package lotfigrira.location.Validators;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.tomcat.util.buf.StringUtils;
-import org.springframework.validation.Errors;
+import org.springframework.util.StringUtils;
 
 import lotfigrira.location.Dto.AdherantDto;
 
@@ -16,7 +14,7 @@ public class AdherantValidator {
             errors.add("please fill the name field !!!");
             errors.add("please fill the email field !!!");
         }
-        if(!org.springframework.util.StringUtils.hasLength(dto.getNom())){
+        if(!StringUtils.hasLength(dto.getNom())){
             errors.add("please fill the name field !!!");
         }
         if(!org.springframework.util.StringUtils.hasLength(dto.getEmail())){

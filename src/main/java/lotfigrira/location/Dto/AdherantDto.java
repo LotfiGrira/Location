@@ -29,8 +29,8 @@ public class AdherantDto {
         }
         Adherant adherant= new Adherant();
         adherant.setId(adherantDto.getId());
-        adherant.setNom(adherantDto.getNom())
-        adherant.setEmail(adherantDto.getEmail())
+        adherant.setNom(adherantDto.getNom());
+        adherant.setEmail(adherantDto.getEmail());
         
         return adherant;
     }

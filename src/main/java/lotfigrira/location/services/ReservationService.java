@@ -1,14 +1,23 @@
 package lotfigrira.location.services;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
+import lotfigrira.location.Dto.ReservationDto;
+import lotfigrira.location.Validators.AdherantValidator;
+import lotfigrira.location.Validators.ReservationValidator;
+import lotfigrira.location.exceptions.InvalidEntityException;
 import lotfigrira.location.modul.Reservation;
 import lotfigrira.location.repo.ReservationRepository;
 
 @Service
+@Slf4j
 public class ReservationService {
     private final ReservationRepository reservationRepository;
     @Autowired
@@ -16,72 +25,71 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
-    public Reservation saveReservation(Reservation reservation) {
-        if (reservation == null) {
-            throw new IllegalArgumentException("Reservation or reservation date cannot be NULL !!!");
+    public ReservationDto save(ReservationDto dto) {
+                List<String> errors=ReservationValidator.validate(dto);
+
+        if (!errors.isEmpty()) {
+            log.error("Invalid reservation {}", dto);
+                throw new InvalidEntityException("invalid reservation",errors);
         }
         List<Reservation> overlappingReservations = reservationRepository.findOverlappingReservations(
-                reservation.getDate_res(),
-                reservation.getHeure_debut(),
-                reservation.getHeure_fin()
+                dto.getDate_res(),
+                dto.getHeure_debut(),
+                dto.getHeure_fin()
         );
         if (!overlappingReservations.isEmpty()) {
             throw new IllegalStateException("The reservation overlaps with an existing reservation !!!");
         }
-        return reservationRepository.save(reservation);
+        return  ReservationDto.fromEntity(reservationRepository.save(ReservationDto.toEntity(dto))) ;
     }
     
-    public Reservation findReservationById(Integer id){
+    public ReservationDto findById(Integer id){
         if (id == null) {
-            throw new RuntimeException("ID should not be NULL !!!");
+            log.error("ID should not be NULL !");
+            return null ;
         }
 
-        return reservationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Reservation with this ID: "+id+" Not found !!!"));
+    return reservationRepository.findById(id).map(ReservationDto::fromEntity).orElseThrow(()-> 
+        new EntityNotFoundException(
+        "none adherant with this ID : "+ id +" found"));
     }
 
-    public List<Reservation> findAllReservation() {
-        return reservationRepository.findAll();
+    public List<ReservationDto> findAll() {
+        return reservationRepository.findAll().stream()
+        .map(ReservationDto::fromEntity)
+        .collect(Collectors.toList())
+        ;
     }
 
-    @Transactional
-    public void deleteReservation(Integer id) {
+    public void delete(Integer id){
         if (id == null) {
-            throw new IllegalArgumentException("ID should not be NULL!");
+            log.error("ID is NULL !");
+            return;
         }
-        try {
-            if (reservationRepository.existsById(id)) {
-                reservationRepository.deleteById(id);
-            } else {
-                throw new IllegalStateException("No object exists with this ID: " + id);
-            }
-        } catch (Exception e) {
-            throw new IllegalStateException("Error reservation with ID: " + id + ". Reason: " + e.getMessage(), e);
-        }
+        reservationRepository.deleteById(id);
     }
+    // public List<Integer> getAvailableHoursForTerrain(Integer terrainId, String dateRes) {
+    //     int openingHour = 8;
+    //     int closingHour = 20;
 
-    public List<Integer> getAvailableHoursForTerrain(Integer terrainId, String dateRes) {
-        int openingHour = 8;
-        int closingHour = 20;
+    //     List<Integer> availableHours = new ArrayList<>();
 
-        List<Integer> availableHours = new ArrayList<>();
+    //     for (int hour = openingHour; hour < closingHour; hour++) {
+    //         int heureDebut = hour;
+    //         int heureFin = hour + 1;
 
-        for (int hour = openingHour; hour < closingHour; hour++) {
-            int heureDebut = hour;
-            int heureFin = hour + 1;
+    //         List<Reservation> overlappingReservations = reservationRepository.findOverlappingReservations(
+    //             dateRes, heureDebut, heureFin);
 
-            List<Reservation> overlappingReservations = reservationRepository.findOverlappingReservations(
-                dateRes, heureDebut, heureFin);
+    //         boolean isTerrainOverlapping = overlappingReservations.stream()
+    //             .anyMatch(reservation -> reservation.getTerrain().getId().equals(terrainId));
 
-            boolean isTerrainOverlapping = overlappingReservations.stream()
-                .anyMatch(reservation -> reservation.getTerrain().getId().equals(terrainId));
-
-            if (!isTerrainOverlapping) {
-                availableHours.add(hour);
-            }
-        }
+    //         if (!isTerrainOverlapping) {
+    //             availableHours.add(hour);
+    //         }
+    //     }
     
-        return availableHours;
-    }
+    //     return availableHours;
+    // }
     
 }

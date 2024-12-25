@@ -1,5 +1,7 @@
 package lotfigrira.location.Dto;
 
+import org.antlr.v4.runtime.misc.NotNull;
+
 import lombok.Builder;
 import lombok.Data;
 import lotfigrira.location.modul.Reservation;
@@ -10,7 +12,11 @@ public class ReservationDto {
     
     private Integer id; 
     private String date_res; 
-    private int heure_debut; 
+    @SuppressWarnings("deprecation")
+    @NotNull
+    private int heure_debut;
+    @SuppressWarnings("deprecation")
+    @NotNull
     private int heure_fin; 
     private AdherantDto user;
     private TerrainDto terrain;

@@ -9,15 +9,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import lotfigrira.location.modul.Adherant;
+import lotfigrira.location.Dto.ReservationDto;
 import lotfigrira.location.modul.Reservation;
-import lotfigrira.location.modul.Terrain;
-import lotfigrira.location.services.AdherantService;
 import lotfigrira.location.services.ReservationService;
-import lotfigrira.location.services.TerrainService;
 
 @RestController
 public class LocationController extends Exception{
@@ -31,47 +27,32 @@ public class LocationController extends Exception{
 
 
 @PostMapping("/new-reservation")
-    public ResponseEntity<String> saveReservation(@RequestBody Reservation reservation) {
-        try {
-            reservationService.saveReservation(reservation);
-            return ResponseEntity.ok("Reservation saved successfully!");
-        }catch(Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to save reservation"+ e.getMessage());
-        }
+    public ReservationDto save(@RequestBody ReservationDto dto) {
+        return reservationService.save(dto);
     }
 @GetMapping("/reservations")
-    public List<Reservation> findAllReservation(){
-        return reservationService.findAllReservation();
+    public List<ReservationDto> findAll(){
+        return reservationService.findAll();
     }
 
 @DeleteMapping("/remove-reservation/{id}")
-    public ResponseEntity<String> deleteReservation(@PathVariable Integer id) {
-        if (id == null) {
-            throw new IllegalArgumentException("ID should not be null !!!!");
-        }
-        try {
-            reservationService.deleteReservation(id);
-            return ResponseEntity.ok("Reservation deleted successfully!");
-        } catch (Exception e) {
-            return    ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                    .body("Failed to delete reservation. Reason: " + e.getMessage());
-        }
+    public void delete(@PathVariable Integer id) {
+        reservationService.delete(id);
     }
 
 @GetMapping("/reservation/{id}")
-    public Reservation findReservationById(@PathVariable Integer id){
-        
-        return reservationService.findReservationById(id);
+    public ReservationDto findById(@PathVariable Integer id){
+        return reservationService.findById(id);
     }
 
-    @GetMapping("/available-hours")
-    public ResponseEntity<List<Integer>> getAvailableHoursForTerrain(
-        @RequestParam Integer terrainId,
-        @RequestParam String dateRes
-    ) {
-        List<Integer> availableHours = reservationService.getAvailableHoursForTerrain(terrainId, dateRes);
+    // @GetMapping("/available-hours")
+    // public ResponseEntity<List<Integer>> getAvailableHoursForTerrain(
+    //     @RequestParam Integer terrainId,
+    //     @RequestParam String dateRes
+    // ) {
+    //     List<Integer> availableHours = reservationService.getAvailableHoursForTerrain(terrainId, dateRes);
 
-        return ResponseEntity.ok(availableHours);
-    }
+    //     return ResponseEntity.ok(availableHours);
+    // }
 
 }

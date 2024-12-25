@@ -1,19 +1,14 @@
 package lotfigrira.location.services;
 
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
-import ch.qos.logback.core.spi.ErrorCodes;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import lotfigrira.location.Dto.AdherantDto;
 import lotfigrira.location.Validators.AdherantValidator;
 import lotfigrira.location.exceptions.InvalidEntityException;
-import lotfigrira.location.modul.Adherant;
 import lotfigrira.location.repo.AdherantRepository;
 
 @Service
@@ -51,7 +46,7 @@ public class AdherantService {
         .map(AdherantDto::fromEntity)
         .collect(Collectors.toList());
     }
-    public void deleteById(Integer id){
+    public void delete(Integer id){
         if (id == null) {
             log.error("ID is NULL !");
             return;

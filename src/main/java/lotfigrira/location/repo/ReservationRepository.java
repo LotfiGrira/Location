@@ -22,6 +22,4 @@ public interface ReservationRepository extends JpaRepository<Reservation,Integer
     @Param("heureDebut") int heureDebut,
     @Param("heureFin") int heureFin
     );
-    
-    List<Integer> getAvailableHoursForTerrain(Integer terrainId, String dateRes);
 }
