@@ -16,10 +16,10 @@ public class TerrainValidator {
             errors.add("please fill the surface field !!!");
             return errors;
         }
-        if (!StringUtils.hasLength(dto.getNom())) {
+        if (StringUtils.hasLength(dto.getNom())) {
             errors.add("please fill the name field !!!");
         }
-        if (!StringUtils.hasLength(dto.getSurface())) {
+        if (StringUtils.hasLength(dto.getSurface())) {
             errors.add("please fill the surface field !!!");
         }
         return errors;

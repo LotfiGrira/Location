@@ -24,10 +24,6 @@ AdherantController(AdherantService adherantService){
 
 @PostMapping("/new-adherant")
     public AdherantDto save(@RequestBody AdherantDto dto){
-        List<String> errors = AdherantValidator.validate(dto);
-        if (!errors.isEmpty()) { 
-            throw new InvalidEntityException ("check your object please !!",errors);
-        }
         return adherantService.save(dto);
     }
 @GetMapping("/adherant/{id}")
@@ -41,7 +37,7 @@ public List<AdherantDto> findAll(){
 }
 
 @DeleteMapping("/remove-adherant/{id}")
-    public void delete(@PathVariable Integer id){
-        adherantService.delete(id);
+    public String delete(@PathVariable Integer id){
+        return adherantService.delete(id);
     }
 }

@@ -32,8 +32,8 @@ public class LocationController extends Exception{
     }
 
 @DeleteMapping("/remove-reservation/{id}")
-    public void delete(@PathVariable Integer id) {
-        reservationService.delete(id);
+    public String delete(@PathVariable Integer id) {
+        return reservationService.delete(id);
     }
 
 @GetMapping("/reservation/{id}")

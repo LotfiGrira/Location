@@ -48,7 +48,7 @@ public class TerrainService {
                                 );
     }
 
-    public List<TerrainDto> findAllTerrains() {
+    public List<TerrainDto> findAll() {
         return terrainRepository.findAll().stream()
                 .map(TerrainDto::fromEntity)
                 .collect(Collectors.toList())    

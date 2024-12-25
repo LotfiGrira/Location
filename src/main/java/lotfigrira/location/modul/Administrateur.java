@@ -21,6 +21,6 @@ public class Administrateur {
     @GeneratedValue(strategy = GenerationType.IDENTITY) 
     private Integer id; 
     private String nom; 
-    private String username; 
+    private String userName; 
     private String password; 
 }

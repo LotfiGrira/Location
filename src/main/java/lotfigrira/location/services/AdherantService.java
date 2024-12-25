@@ -20,6 +20,11 @@ public class AdherantService {
         this.adherantRepository = adherantRepository;
     }
     public AdherantDto save(AdherantDto dto){
+        List<String> errors = AdherantValidator.validate(dto);
+        if (!errors.isEmpty()) {
+            log.error("Adherant object is Null !", errors);
+            throw new InvalidEntityException("Invalid Adherant object !",errors);
+        }
         return AdherantDto.fromEntity(
                     adherantRepository.save(
                         AdherantDto.toEntity(dto)
@@ -31,13 +36,18 @@ public class AdherantService {
             log.error("ID should not be NULL !");
             return null ;
         }
-        return adherantRepository.findById(id).map(AdherantDto::fromEntity).orElseThrow(()-> 
-            new EntityNotFoundException(
-            "none adherant with this ID : "+ id +" found"));
+        return adherantRepository
+                .findById(id)
+                .map(AdherantDto::fromEntity)
+                .orElseThrow(()-> 
+                new EntityNotFoundException(
+                "none adherant with this ID : "+ id +" found"));
     }
     
     public List<AdherantDto> findAll(){
-        return adherantRepository.findAll().stream()
+        return adherantRepository
+        .findAll()
+        .stream()
         .map(AdherantDto::fromEntity)
         .collect(Collectors.toList());
     }

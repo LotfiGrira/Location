@@ -10,7 +10,8 @@ public class AdherantDto {
     
     private Integer id; 
     private String nom; 
-    private String email; 
+    private String email;
+    public String getPassword; 
     
     public static AdherantDto fromEntity(Adherant adherant){
         if (adherant==null) {
@@ -34,4 +35,5 @@ public class AdherantDto {
         
         return adherant;
     }
+
 }

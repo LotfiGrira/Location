@@ -1,5 +1,7 @@
 package lotfigrira.location.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,5 +34,8 @@ public class TerrainController {
         terrainService.delete(id);
         return "terrain deleted succesfully" + id;
     }
-
+@GetMapping("/terrains")
+public List<TerrainDto> findAll(){
+    return terrainService.findAll();
+}
 }
