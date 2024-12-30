@@ -47,7 +47,7 @@ public class ReservationService {
 
     return reservationRepository.findById(id).map(ReservationDto::fromEntity).orElseThrow(()-> 
         new EntityNotFoundException(
-        "none adherant with this ID : "+ id +" found"));
+        "none reservation with this ID : "+ id +" found"));
     }
 
     public List<ReservationDto> findAll() {
@@ -65,28 +65,5 @@ public class ReservationService {
         reservationRepository.deleteById(id);
         return "deleted successfully";
     }
-    // public List<Integer> getAvailableHoursForTerrain(Integer terrainId, String dateRes) {
-    //     int openingHour = 8;
-    //     int closingHour = 20;
-
-    //     List<Integer> availableHours = new ArrayList<>();
-
-    //     for (int hour = openingHour; hour < closingHour; hour++) {
-    //         int heureDebut = hour;
-    //         int heureFin = hour + 1;
-
-    //         List<Reservation> overlappingReservations = reservationRepository.findOverlappingReservations(
-    //             dateRes, heureDebut, heureFin);
-
-    //         boolean isTerrainOverlapping = overlappingReservations.stream()
-    //             .anyMatch(reservation -> reservation.getTerrain().getId().equals(terrainId));
-
-    //         if (!isTerrainOverlapping) {
-    //             availableHours.add(hour);
-    //         }
-    //     }
-    
-    //     return availableHours;
-    // }
     
 }

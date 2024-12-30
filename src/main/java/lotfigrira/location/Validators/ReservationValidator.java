@@ -10,6 +10,9 @@ public class ReservationValidator {
         List<String> errors =new ArrayList<>();
         
         if (dto == null) {
+            errors.add("please fill the reservation date field !!!");
+            errors.add("please fill the user fields !!!");
+            errors.add("please fill the ground fields !!!");
             return errors;
         }
         if (!StringUtils.hasLength(dto.getDate_res())) {

@@ -41,14 +41,4 @@ public class LocationController extends Exception{
         return reservationService.findById(id);
     }
 
-    // @GetMapping("/available-hours")
-    // public ResponseEntity<List<Integer>> getAvailableHoursForTerrain(
-    //     @RequestParam Integer terrainId,
-    //     @RequestParam String dateRes
-    // ) {
-    //     List<Integer> availableHours = reservationService.getAvailableHoursForTerrain(terrainId, dateRes);
-
-    //     return ResponseEntity.ok(availableHours);
-    // }
-
 }

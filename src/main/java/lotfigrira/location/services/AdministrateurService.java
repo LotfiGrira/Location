@@ -2,17 +2,13 @@ package lotfigrira.location.services;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
-
 import lombok.extern.slf4j.Slf4j;
 import lotfigrira.location.Dto.AdministrateurDto;
 import lotfigrira.location.Validators.AdminValidator;
 import lotfigrira.location.exceptions.EntityNotFoundException;
 import lotfigrira.location.exceptions.InvalidEntityException;
-import lotfigrira.location.modul.Administrateur;
 import lotfigrira.location.repo.AdministrateurRepository;
 
 @Service

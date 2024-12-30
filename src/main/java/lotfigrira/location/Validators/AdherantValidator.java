@@ -17,7 +17,7 @@ public class AdherantValidator {
         if(!StringUtils.hasLength(dto.getNom())){
             errors.add("please fill the name field !!!");
         }
-        if(!org.springframework.util.StringUtils.hasLength(dto.getEmail())){
+        if(!StringUtils.hasLength(dto.getEmail())){
             errors.add("please fill the email field !!!");
         }
         return errors;
